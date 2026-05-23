@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>오늘의 할 일</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <h1>오늘의 할 일</h1>
+  </header>
+
+  <section id="progress">
+    <!-- [BUG-03 수정] progress-label을 정적 선언 → JS 동적 생성 불필요, 레이아웃 점프 방지 -->
+    <p id="progress-label" aria-live="polite"></p>
+    <div id="overall-progress">
+      <div
+        role="progressbar"
+        aria-valuenow="0"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-label="전체 진행률"
+      ></div>
+    </div>
+
+    <div id="category-progress">
+      <div class="mini-progress" data-category="work">
+        <span>업무</span>
+        <div
+          role="progressbar"
+          aria-valuenow="0"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-label="업무 진행률"
+        ></div>
+      </div>
+      <div class="mini-progress" data-category="personal">
+        <span>개인</span>
+        <div
+          role="progressbar"
+          aria-valuenow="0"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-label="개인 진행률"
+        ></div>
+      </div>
+      <div class="mini-progress" data-category="study">
+        <span>공부</span>
+        <div
+          role="progressbar"
+          aria-valuenow="0"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-label="공부 진행률"
+        ></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="input-area">
+    <input
+      type="text"
+      id="todo-input"
+      placeholder="새로운 할 일을 입력하세요"
+      aria-label="할 일 입력"
+      maxlength="200"
+    />
+    <select id="category-select" aria-label="카테고리 선택">
+      <option value="work">업무</option>
+      <option value="personal">개인</option>
+      <option value="study">공부</option>
+    </select>
+    <select id="input-priority" aria-label="우선순위 선택">
+      <option value="high">중요</option>
+      <option value="medium" selected>보통</option>
+      <option value="low">낮음</option>
+    </select>
+    <button id="add-btn" type="button">추가</button>
+  </section>
+  <p id="auto-hint" aria-live="polite"></p>
+
+  <nav id="filter-tabs" aria-label="필터">
+    <button type="button" data-filter="all" class="active">전체</button>
+    <button type="button" data-filter="work">업무</button>
+    <button type="button" data-filter="personal">개인</button>
+    <button type="button" data-filter="study">공부</button>
+    <button type="button" data-filter="completed" id="tab-completed" hidden>완료 <span id="completed-count"></span></button>
+    <button id="btn-settings" type="button">⚙️ 설정</button>
+  </nav>
+
+  <section id="settings-panel" hidden>
+    <p><strong>카테고리 우선순위 설정</strong></p>
+    <div class="settings-order-row">
+      <div class="settings-order-col">
+        <span class="order-label">1순위</span>
+        <select id="order-1">
+          <option value="work">업무</option>
+          <option value="personal">개인</option>
+          <option value="study">공부</option>
+        </select>
+      </div>
+      <div class="settings-order-col">
+        <span class="order-label">2순위</span>
+        <select id="order-2">
+          <option value="work">업무</option>
+          <option value="personal">개인</option>
+          <option value="study">공부</option>
+        </select>
+      </div>
+      <div class="settings-order-col">
+        <span class="order-label">3순위</span>
+        <select id="order-3">
+          <option value="work">업무</option>
+          <option value="personal">개인</option>
+          <option value="study">공부</option>
+        </select>
+      </div>
+    </div>
+    <div class="settings-btn-row">
+      <button id="btn-save-settings" type="button">저장</button>
+      <button id="btn-close-settings" type="button">닫기</button>
+    </div>
+  </section>
+
+  <section id="search-area">
+    <input type="search" id="input-search" placeholder="🔍 할 일 검색..." aria-label="할 일 검색" autocomplete="off" />
+  </section>
+
+  <div id="bulk-header" hidden>
+    <label class="bulk-check-wrap" for="bulk-checkbox">
+      <span class="bulk-box" id="bulk-box" aria-hidden="true"></span>
+    </label>
+    <input type="checkbox" id="bulk-checkbox" style="display:none">
+    <span id="bulk-label"></span>
+  </div>
+
+  <ul id="todo-list" aria-label="할 일 목록" aria-live="polite" aria-relevant="additions removals">
+    <li id="empty-state">등록된 할 일이 없습니다.</li>
+  </ul>
+
+  <footer id="app-footer">
+    <button id="clear-completed-btn" type="button">🗑 완료 항목 전체 삭제</button>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="app.js" defer></script>
+</body>
+</html>
